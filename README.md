@@ -33,6 +33,35 @@ To enable automated releases, set the following repository secrets:
 
 ---
 
+## Repository setup
+
+Additional repository options:
+
+`General->Pull Requests`
+
+- Always suggest updating pull request branches (optional)
+- Allow auto-merge (required)
+- Automatically delete head branches (optional)
+
+`Rules->Rulesets`
+
+- Ruleset name: `main`
+- Enforcement status: `active`
+- Targets: `Include default branch`
+  - Require linear history (optional)
+  - Require status checks to pass
+    - Add Check: Check required tests passed
+  - Block force pushes
+
+`Actions->General`
+
+- Allow GitHub Actions to create and approve pull requests (required)
+
+`Pages`
+
+- Deploy from a branch
+- Branch: `main` `/root`
+
 ## Development Environment
 
 ### VS Code + DevContainer
@@ -71,9 +100,9 @@ Use the included `release.sh` script:
 
 CI will:
 
-* Bump the version
-* Create/update a draft PR (release/draft)
-* Tag and publish on merge to main
+- Bump the version
+- Create/update a draft PR (release/draft)
+- Tag and publish on merge to main
 
 ## Dependency Management
 
@@ -84,6 +113,7 @@ bundle install
 ```
 
 Dependabot is configured to automatically update:
+
 - Ruby gems (`Gemfile`)
 - GitHub Actions
 - DevContainer metadata
