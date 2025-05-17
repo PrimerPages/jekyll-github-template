@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    your-gem-name (0.1.2)
+    your-gem-name (0.1.0)
       jekyll (>= 3.0, < 5.0)
 
 GEM
