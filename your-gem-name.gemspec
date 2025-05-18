@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-require_relative 'lib/your_gem/version'
+require File.expand_path('lib/your_gem/version', __dir__)
 
 Gem::Specification.new do |spec|
-  spec.name          = 'your-gem-name'
-  spec.version       = YourGem::VERSION
-  spec.authors       = ['Your Name']
-  spec.email         = ['your@email.com']
+  spec.name           = 'your-gem-name'
+  spec.version        = YourGem::VERSION
+  spec.authors        = ['Your Name']
+  spec.email          = ['your@email.com']
 
-  spec.summary       = "Short summary of your gem's purpose."
-  spec.description   = "A longer description of what your gem does and why it's useful."
-  spec.homepage      = 'https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO'
-  spec.license       = 'MIT'
+  spec.summary        = "Short summary of your gem's purpose."
+  spec.description    = "A longer description of what your gem does and why it's useful."
+  spec.homepage       = 'https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO'
+  spec.license        = 'MIT'
 
   spec.metadata = {
     'source_code_uri' => spec.homepage,
@@ -19,8 +19,8 @@ Gem::Specification.new do |spec|
     'rubygems_mfa_required' => 'true'
   }
 
-  spec.files = Dir['lib/**/*.rb', 'README.md', 'LICENSE', 'spec/fixtures/**/*']
-  spec.require_paths = ['lib']
+  spec.files          = Dir['lib/**/*.rb', 'README.md', 'LICENSE']
+  spec.require_paths  = ['lib']
 
   spec.required_ruby_version = '>= 2.7'
 
