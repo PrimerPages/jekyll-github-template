@@ -34,7 +34,7 @@ load_env_file() {
 
 # Extract the gem name from the gemspec
 get_gem_name() {
-  ruby -e 'spec = eval(File.read(ARGV[0])); puts spec.name' "$1"
+  ruby -e 'puts Gem::Specification.load(ARGV[0]).name' "$1"
 }
 
 # Ensure RUBYGEMS_API_KEY is set
@@ -76,19 +76,9 @@ build_gem() {
 # Upload the gem to RubyGems unless it's a dry run
 upload_gem() {
   local gem_file="$1"
-  local dry_run="$2"
 
-  if [[ "$dry_run" == true ]]; then
-    echo "[DRY RUN] Skipping gem push for $gem_file"
-    return
-  fi
-  local gem_name
-  gem_name=$(get_gem_name "$GEMSPEC_FILE")
-
-  echo "Released $gem_file to $RUBYGEMS_HOST/gems/$gem_name"
   echo "Publishing $gem_file to RubyGems..."
   gem push "$gem_file" --host "$RUBYGEMS_HOST"
-  echo "Released $gem_file to $RUBYGEMS_HOST/gems/$gem_name"
 }
 
 # === Main ===
@@ -109,13 +99,28 @@ elif [[ "$#" -gt 1 ]]; then
   exit 1
 fi
 
-echo "Starting release for $GEMSPEC_FILE"
+# Check for DRY_RUN in environment (only if not already set by CLI)
+if [[ "$dry_run" == "false" && "${DRY_RUN:-}" == "true" ]]; then
+  dry_run=true
+fi
 
 load_env_file
-setup_rubygems_credentials
+if [[ "$dry_run" == true ]]; then
+  echo "[DRY RUN] Skipping credential setup"
+else
+  setup_rubygems_credentials
+fi
 
 detect_gemspec_file
+gem_name=$(get_gem_name $GEMSPEC_FILE)
+echo "Starting release for $gem_name found in $GEMSPEC_FILE"
+
 gem_file=$(build_gem "$GEMSPEC_FILE")
 echo "Generated gem file: $gem_file"
 
-upload_gem "$gem_file" "$dry_run"
+if [[ "$dry_run" == true ]]; then
+  echo "[DRY RUN] Skipping gem push for $gem_file to $RUBYGEMS_HOST/gems/$gem_name"
+else
+  upload_gem "$gem_file" "$dry_run"
+  echo "Released $gem_file to $RUBYGEMS_HOST/gems/$gem_name"
+fi
