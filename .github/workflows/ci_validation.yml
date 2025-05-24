@@ -2,23 +2,33 @@ name: CI script validation tests
 
 on:
   pull_request:
-    paths:
-      - '.github/scripts/**'
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
   ci-script-tests:
-    name: Run ci script tests
+    name: Run ci validation tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Bats
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            .github/**
+            Gemfile
+            *.gemspec
+
+      - name: Show skipped message
+        if: steps.changed-files.outputs.any_changed == 'false'
+        run: echo "No relevant changes — skipping validation."
+
+      - name: Run ci validation
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y bats
 
-      - name: Run Bats test file
-        run: |
           bats .github/scripts/*_test.bats
