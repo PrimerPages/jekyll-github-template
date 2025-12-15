@@ -51,7 +51,7 @@ jobs:
         run: bundle install
 
       - name: Create Draft Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "Bump version to ${{ needs.draft-release.outputs.tag_name }}"
           branch: release/draft
